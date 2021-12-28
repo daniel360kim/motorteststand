@@ -7,8 +7,8 @@
 #include <EEPROM.h>
 
 //pins:
-const int HX711_dout = 8; //mcu > HX711 dout pin
-const int HX711_sck = 9; //mcu > HX711 sck pin
+const int HX711_dout = 8; //mcu > HX711 dout pin/edit based on your DAC pin usage
+const int HX711_sck = 9; //mcu > HX711 sck pin/edit based on your DAC pin usage
 
 //HX711 constructor:
 HX711_ADC LoadCell(HX711_dout, HX711_sck);
@@ -23,7 +23,7 @@ void setup() {
   delay(10000);
 
   LoadCell.begin();
-  float calibrationValue; // paste the calibration value here
+  double calibrationValue; // paste the calibration value here
   calibrationValue = 696.0; 
 #if defined(ESP8266)|| defined(ESP32)
   
@@ -53,7 +53,7 @@ void loop() {
   // get smoothed value from the dataset:
   if (newDataReady) {
     if (millis() > t + serialPrintInterval) {
-      float i = LoadCell.getData();
+      double i = LoadCell.getData();
       Serial.print("Load_cell output val: ");
       Serial.println(i);
       newDataReady = 0;
@@ -63,7 +63,7 @@ void loop() {
 
   // receive command from serial terminal, send 't' to initiate tare operation:
   if (Serial.available() > 0) {
-    float i;
+    double i;
     char inByte = Serial.read();
     if (inByte == 't') LoadCell.tareNoDelay();
   }
